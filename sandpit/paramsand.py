@@ -3,14 +3,17 @@ import matplotlib.pyplot as plt
 import numpy as np
 import re
 
+def getParam(ser,paramStr,regStr):
+    ser.write(paramStr.encode('utf8'))
+    s = str(ser.read(40).decode('utf8'))
+    s = re.sub('[\x11\x13\r\n '+ regStr+ ']', '', s)
+    return s
+
 def getATT(ser):
-    ser.write(b'ATT?\r\n')
-    s = str(ser.read(30).decode('utf8'))
-    print('1',s)
-    s = re.sub('[\x11\x13\r\n AT]','',s)
-    print ('2',s)
-    s = 'Attenuation:' + str(int(float(s))) + 'dB'
-    print(s)
+    #ser.write(b'ATT?\r\n')
+    #s = str(ser.read(30).decode('utf8'))
+    #s = re.sub('[\x11\x13\r\n AT]','',s)
+    s = 'Atten:' + str(int(float(getParam(ser, 'ATT?', 'AT')))) + 'dB'
     return s
 
 def getREF(ser):
