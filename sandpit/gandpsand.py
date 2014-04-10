@@ -127,7 +127,16 @@ ser.flush()
 
 when = datetime.datetime.now().strftime('%d-%m-%y@%H:%M')
 
-
+fig = plt.figure()
+fig.subplots_adjust(bottom=0.2)
+ax = fig.gca()
+plt.xlim(xmin=0)
+plt.xlim(xmax=10)
+plt.ylim(ymin=-10)
+plt.ylim(ymax=0)
+ax.set_xticks(np.arange(0,11,1))
+ax.set_yticks(np.arange(-10,1,1))
+plt.grid()
 
 refStr = getREF(ser)
 attStr = getATT(ser)
@@ -141,35 +150,6 @@ rbwStr = getRBW(ser)
 vbwStr = getVBW(ser)
 swpStr = getSWP(ser)
 
-x = 1
-y = []
-getA = b'TAA?\r\n'
-ser.write(getA)
-s = ser.read(701*6+40)
-
-for fc in range(0,40):
-    if ((s[fc] != 17) and (s[fc] != 19)):
-        break
-     
-for i in range(0,701):
-    y.append(float((s[i*6+0+fc]-48)*1000 +
-                   (s[i*6+1+fc]-48)*100 +
-                   (s[i*6+2+fc]-48)*10 +
-                   (s[i*6+3+fc]-48))/34 -10)
-
-fig = plt.figure()
-fig.subplots_adjust(bottom=0.2)
-ax = fig.gca()
-plt.xlim(xmin=0)
-plt.xlim(xmax=10)
-plt.ylim(ymin=-10)
-plt.ylim(ymax=0)
-ax.set_xticks(np.arange(0,11,1))
-ax.set_yticks(np.arange(-10,1,1))
-plt.grid()
-
-plt.plot([ x/70.1 for x in range(len(y))], y)
-
 plt.title('Time:' + when + '\n' +
           refStr + ', ' + attStr + '   ' + divStr)
 
@@ -180,11 +160,3 @@ plt.xlabel(srtStr + ', ' + stpStr + '\n' +
 plt.show()
 
 
-
-
-
-
-
-
-
-plt.show()
